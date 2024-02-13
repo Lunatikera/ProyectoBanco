@@ -25,9 +25,7 @@ public class CuentaNegocio implements ICuentaNegocio {
 
     @Override
     public void transaccion(CuentaDTO cuenta1, CuentaDTO cuenta2, double monto) throws NegocioException {
-         if (cuenta2 == null) {
-            throw new PersistenciaException("No se pudo encontrar la cuenta");
-        }
+        
     }
     
 }

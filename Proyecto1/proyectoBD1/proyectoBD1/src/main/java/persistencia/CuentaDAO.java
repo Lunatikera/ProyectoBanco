@@ -96,7 +96,7 @@ public class CuentaDAO implements ICuentaDAO {
                 cancelar.execute();
                 throw new PersistenciaException("Saldo insuficiente");
             }
-            
+
             sacar.setDouble(1, monto);
             sacar.setString(2, cuenta1.getNumeroCuenta());
             sacar.executeUpdate();
@@ -109,6 +109,7 @@ public class CuentaDAO implements ICuentaDAO {
         }
     }
 
+    @Override
     public BigDecimal consultarSaldo(CuentaDTO cuenta) throws PersistenciaException {
         String consultaSaldo = "Select saldo from cuentas where numeroCuenta=?";
         BigDecimal saldoDisponible = null;
@@ -129,6 +130,6 @@ public class CuentaDAO implements ICuentaDAO {
     }
 
     public void retiroSinCuenta(CuentaEntidad cuenta1, double monto) {
-
+aaaaaaaa
     }
 }

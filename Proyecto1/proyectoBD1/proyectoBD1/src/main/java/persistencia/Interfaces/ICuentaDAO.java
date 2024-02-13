@@ -7,6 +7,7 @@ package persistencia.Interfaces;
 import dto.CuentaDTO;
 import entidades.ClienteEntidad;
 import entidades.CuentaEntidad;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import persistencia.PersistenciaException;
 
@@ -22,4 +23,5 @@ public interface ICuentaDAO {
 
     public void transaccion(CuentaDTO cuenta1, CuentaDTO cuenta2, double monto) throws PersistenciaException;
 
+    public BigDecimal consultarSaldo(CuentaDTO cuenta) throws PersistenciaException;
 }

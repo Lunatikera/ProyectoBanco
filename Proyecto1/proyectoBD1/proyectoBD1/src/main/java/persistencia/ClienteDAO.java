@@ -76,7 +76,8 @@ public class ClienteDAO implements IClienteDAO {
         }
     }
 
-    public ClienteEntidad iniciarSesion(String nombreUsuario, String contraseña) throws PersistenciaException{
+    @Override
+    public ClienteEntidad iniciarSesion(String nombreUsuario, String contraseña) throws PersistenciaException {
         // Consulta SQL para verificar las credenciales de inicio de sesión del cliente
         ClienteEntidad cliente = null;
         String consulta = "SELECT * FROM Clientes WHERE NomUsuario = ? AND Contraseña = ?";

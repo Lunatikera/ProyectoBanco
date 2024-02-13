@@ -1,0 +1,38 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class Main {
+
+    public static void main(String[] args) {
+        // Crear un nuevo cliente para la inserción o actualización
+        ClienteEntidad nuevoCliente = new ClienteEntidad();
+        nuevoCliente.setNombre("Juan");
+        nuevoCliente.setNomUsuario("juanito123");
+        nuevoCliente.setContraseña("clave123");
+        nuevoCliente.setApellidoPa("Pérez");
+        nuevoCliente.setApellidoMa("Gómez");
+        nuevoCliente.setIdCliente(1); // Si es una actualización, asegúrate de establecer el ID del cliente
+
+        // Establecer la conexión a la base de datos
+        try (Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/nombre_de_tu_base_de_datos", "usuario", "contraseña")) {
+            // Insertar el nuevo cliente en la base de datos
+            insertarCliente(nuevoCliente, conexion);
+
+            // Actualizar el cliente en la base de datos
+            actualizarCliente(nuevoCliente, conexion);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void insertarCliente(ClienteEntidad cliente, Connection conexion) throws SQLException {
+        // Método para insertar un cliente en la base de datos
+        // Implementación del método insertarCliente
+    }
+
+    private static void actualizarCliente(ClienteEntidad cliente, Connection conexion) throws SQLException {
+        // Método para actualizar un cliente en la base de datos
+        // Implementación del método actualizarCliente
+    }
+}

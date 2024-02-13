@@ -14,15 +14,15 @@ import persistencia.PersistenciaException;
 public class ClienteNegocio implements IClienteNegocio{
 
     @Override
-    public void agregar(ClienteEntidad cliente) throws PersistenciaException {
+    public void agregar(ClienteEntidad cliente) throws NegocioException {
     }
 
     @Override
-    public void editar(ClienteEntidad cliente) throws PersistenciaException {
+    public void editar(ClienteEntidad cliente) throws NegocioException {
     }
 
     @Override
-    public ClienteEntidad iniciarSesion(String nombreUsuario, String contraseña) throws PersistenciaException {
+    public ClienteEntidad iniciarSesion(String nombreUsuario, String contraseña) throws NegocioException {
     }
     
 }

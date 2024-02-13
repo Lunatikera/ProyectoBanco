@@ -15,11 +15,11 @@ import persistencia.PersistenciaException;
  */
 public interface IClienteNegocio {
 
-    public void agregar(ClienteEntidad cliente) throws PersistenciaException;
+    public void agregar(ClienteEntidad cliente) throws NegocioException;
 
-    public void editar(ClienteEntidad cliente) throws PersistenciaException;
+    public void editar(ClienteEntidad cliente) throws NegocioException;
 
-    public ClienteEntidad iniciarSesion(String nombreUsuario, String contraseña) throws PersistenciaException;
+    public ClienteEntidad iniciarSesion(String nombreUsuario, String contraseña) throws NegocioException;
 
   
 }

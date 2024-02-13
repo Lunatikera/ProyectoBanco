@@ -16,15 +16,18 @@ import persistencia.PersistenciaException;
 public class CuentaNegocio implements ICuentaNegocio {
 
     @Override
-    public void agregar(CuentaEntidad cuenta, ClienteEntidad cliente) throws PersistenciaException {
+    public void agregar(CuentaEntidad cuenta, ClienteEntidad cliente) throws NegocioException {
     }
 
     @Override
-    public void cancelarCuenta(CuentaEntidad cliente) throws PersistenciaException {
+    public void cancelarCuenta(CuentaEntidad cliente) throws NegocioException {
     }
 
     @Override
-    public void transaccion(CuentaDTO cuenta1, CuentaDTO cuenta2, double monto) throws PersistenciaException {
+    public void transaccion(CuentaDTO cuenta1, CuentaDTO cuenta2, double monto) throws NegocioException {
+         if (cuenta2 == null) {
+            throw new PersistenciaException("No se pudo encontrar la cuenta");
+        }
     }
     
 }

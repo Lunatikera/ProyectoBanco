@@ -80,10 +80,7 @@ public class CuentaDAO implements ICuentaDAO {
     }
 
     public void transaccion(CuentaDTO cuenta1, CuentaDTO cuenta2, double monto) throws PersistenciaException {
-        if (cuenta2 == null) {
-            throw new PersistenciaException("No se pudo encontrar la cuenta");
-        }
-        String consultarSaldo = "Select saldo from cuentas where numeroCuenta=?";
+
         String IniciarTransaccion = "START transaction";
         String SacarDinero = "UPDATE cuentas set saldo= saldo-? WHERE numeroCuenta=? ";
         String ObtenerDinero = "UPDATE cuentas set saldo= saldo+? WHERE numeroCuenta=? ";
@@ -91,32 +88,47 @@ public class CuentaDAO implements ICuentaDAO {
         String finalizarTransaccion = "COMMIT";
 
         ConexionBD conexionBD = new ConexionBD();
-        try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement inicio = conexion.prepareStatement(IniciarTransaccion);  PreparedStatement sacar = conexion.prepareStatement(SacarDinero);  PreparedStatement obtener = conexion.prepareStatement(ObtenerDinero);  PreparedStatement finalizar = conexion.prepareStatement(finalizarTransaccion);  PreparedStatement cancelar = conexion.prepareStatement(cancelarTransaccion);  PreparedStatement saldo = conexion.prepareStatement(consultarSaldo)) {
+        try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement inicio = conexion.prepareStatement(IniciarTransaccion);  PreparedStatement sacar = conexion.prepareStatement(SacarDinero);  PreparedStatement obtener = conexion.prepareStatement(ObtenerDinero);  PreparedStatement finalizar = conexion.prepareStatement(finalizarTransaccion);  PreparedStatement cancelar = conexion.prepareStatement(cancelarTransaccion)) {
 
             inicio.execute();
-            saldo.setString(1, cuenta1.getNumCuenta());
-            ResultSet resultado = saldo.executeQuery();
-            if (resultado.next()) {
-                BigDecimal saldoDisponible = resultado.getBigDecimal("saldo");
-                if (saldoDisponible.compareTo(new BigDecimal(monto))<0) {
-                    cancelar.execute();
-                    throw new PersistenciaException("Saldo insuficiente");
-                }
-            }
 
+            if (consultarSaldo(cuenta1).compareTo(new BigDecimal(monto)) < 0) {
+                cancelar.execute();
+                throw new PersistenciaException("Saldo insuficiente");
+            }
+            
             sacar.setDouble(1, monto);
-            sacar.setString(2, cuenta1.getNumCuenta());
+            sacar.setString(2, cuenta1.getNumeroCuenta());
             sacar.executeUpdate();
             obtener.setDouble(1, monto);
-            obtener.setString(2, cuenta2.getNumCuenta());
+            obtener.setString(2, cuenta2.getNumeroCuenta());
             obtener.executeUpdate();
             finalizar.execute();
         } catch (SQLException e) {
-            throw new PersistenciaException("Error"+ e.getMessage());
+            throw new PersistenciaException("Error" + e.getMessage());
         }
     }
-    
-    public void retiroSinCuenta(CuentaEntidad cuenta1, double monto){
-        
+
+    public BigDecimal consultarSaldo(CuentaDTO cuenta) throws PersistenciaException {
+        String consultaSaldo = "Select saldo from cuentas where numeroCuenta=?";
+        BigDecimal saldoDisponible = null;
+        ConexionBD conexionBD = new ConexionBD();
+        try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement consulta = conexion.prepareStatement(consultaSaldo)) {
+            consulta.setString(1, cuenta.getNumeroCuenta());
+            ResultSet resultado = consulta.executeQuery();
+            if (resultado.next()) {
+                saldoDisponible = resultado.getBigDecimal("saldo");
+                return saldoDisponible;
+
+            } else {
+                throw new PersistenciaException("Hubo un error");
+            }
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error" + e.getMessage());
+        }
+    }
+
+    public void retiroSinCuenta(CuentaEntidad cuenta1, double monto) {
+
     }
 }

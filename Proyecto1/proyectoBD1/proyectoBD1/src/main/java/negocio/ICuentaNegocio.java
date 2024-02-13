@@ -14,10 +14,10 @@ import persistencia.PersistenciaException;
  * @author Usuario
  */
 public interface ICuentaNegocio {
-      public void agregar(CuentaEntidad cuenta, ClienteEntidad cliente) throws PersistenciaException;
+      public void agregar(CuentaEntidad cuenta, ClienteEntidad cliente) throws NegocioException;
 
-    public void cancelarCuenta(CuentaEntidad cliente) throws PersistenciaException;
+    public void cancelarCuenta(CuentaEntidad cliente) throws NegocioException;
 
-    public void transaccion(CuentaDTO cuenta1, CuentaDTO cuenta2, double monto) throws PersistenciaException;
+    public void transaccion(CuentaDTO cuenta1, CuentaDTO cuenta2, double monto) throws NegocioException;
 
 }

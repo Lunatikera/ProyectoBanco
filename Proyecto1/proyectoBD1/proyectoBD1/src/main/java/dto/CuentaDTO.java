@@ -10,11 +10,11 @@ package dto;
  */
 public class CuentaDTO {
     private int idCliente;
-    private String numCuenta;
+    private String numeroCuenta;
 
     public CuentaDTO(int idCliente, String numCuenta) {
         this.idCliente = idCliente;
-        this.numCuenta = numCuenta;
+        this.numeroCuenta = numCuenta;
     }
 
     public int getIdCliente() {
@@ -25,17 +25,17 @@ public class CuentaDTO {
         this.idCliente = idCliente;
     }
 
-    public String getNumCuenta() {
-        return numCuenta;
+    public String getNumeroCuenta() {
+        return numeroCuenta;
     }
 
-    public void setNumCuenta(String numCuenta) {
-        this.numCuenta = numCuenta;
+    public void setNumeroCuenta(String numCuenta) {
+        this.numeroCuenta = numCuenta;
     }
 
     @Override
     public String toString() {
-        return numCuenta;
+        return numeroCuenta;
     }
     
     

@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Random;
+import persistencia.Interfaces.IConexionBD;
 import persistencia.Interfaces.ICuentaDAO;
 
 /**
@@ -22,11 +23,16 @@ import persistencia.Interfaces.ICuentaDAO;
  */
 public class CuentaDAO implements ICuentaDAO {
 
+    private IConexionBD conexionBD;
+
+    public CuentaDAO(IConexionBD conexionBD) {
+        this.conexionBD = conexionBD;
+    }
+
     @Override
     public void agregar(CuentaEntidad cuenta, ClienteEntidad cliente) throws PersistenciaException {
         // Definir la consulta SQL para insertar una nueva cuenta en la tabla 'Cuenta'
         String insertCuenta = "INSERT INTO Cuentas (numeroCuenta, saldo, fechaApertura, Nip, id_Cliente) VALUES (?, ?, ?, ?, ?)";
-        ConexionBD conexionBD = new ConexionBD();
         try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement statement = conexion.prepareStatement(insertCuenta, Statement.RETURN_GENERATED_KEYS)) {
             // Generar el número de cuenta automáticamente (puedes implementar la lógica para generarlo)
             String numeroCuenta = generarNumeroAleatorio(); // Implementa este método según tu lógica de generación de número de cuenta
@@ -60,7 +66,6 @@ public class CuentaDAO implements ICuentaDAO {
     public void cancelarCuenta(CuentaEntidad cuenta) throws PersistenciaException {
         // Definir la consulta SQL para actualizar un cliente en la tabla 'clientes'
         String updateCliente = "UPDATE Cuentas SET estado='Cancelada' WHERE numCuenta = ? and Nip= ?";
-        ConexionBD conexionBD = new ConexionBD();
         try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement statement = conexion.prepareStatement(updateCliente)) {
 
             statement.setString(1, cuenta.getNumeroCuenta());
@@ -79,7 +84,7 @@ public class CuentaDAO implements ICuentaDAO {
         }
     }
 
-    public void transaccion(CuentaDTO cuenta1, CuentaDTO cuenta2, double monto) throws PersistenciaException {
+    public void transferencia(CuentaDTO cuenta1, CuentaDTO cuenta2, double monto) throws PersistenciaException {
 
         String IniciarTransaccion = "START transaction";
         String SacarDinero = "UPDATE cuentas set saldo= saldo-? WHERE numeroCuenta=? ";
@@ -87,7 +92,6 @@ public class CuentaDAO implements ICuentaDAO {
         String cancelarTransaccion = "ROLLBACK";
         String finalizarTransaccion = "COMMIT";
 
-        ConexionBD conexionBD = new ConexionBD();
         try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement inicio = conexion.prepareStatement(IniciarTransaccion);  PreparedStatement sacar = conexion.prepareStatement(SacarDinero);  PreparedStatement obtener = conexion.prepareStatement(ObtenerDinero);  PreparedStatement finalizar = conexion.prepareStatement(finalizarTransaccion);  PreparedStatement cancelar = conexion.prepareStatement(cancelarTransaccion)) {
 
             inicio.execute();
@@ -104,32 +108,48 @@ public class CuentaDAO implements ICuentaDAO {
             obtener.setString(2, cuenta2.getNumeroCuenta());
             obtener.executeUpdate();
             finalizar.execute();
+
         } catch (SQLException e) {
             throw new PersistenciaException("Error" + e.getMessage());
         }
     }
 
-    @Override
-    public BigDecimal consultarSaldo(CuentaDTO cuenta) throws PersistenciaException {
-        String consultaSaldo = "Select saldo from cuentas where numeroCuenta=?";
-        BigDecimal saldoDisponible = null;
-        ConexionBD conexionBD = new ConexionBD();
-        try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement consulta = conexion.prepareStatement(consultaSaldo)) {
-            consulta.setString(1, cuenta.getNumeroCuenta());
-            ResultSet resultado = consulta.executeQuery();
-            if (resultado.next()) {
-                saldoDisponible = resultado.getBigDecimal("saldo");
-                return saldoDisponible;
+    private void agregarTransferencia(CuentaDTO cuenta1, CuentaDTO cuenta2, double monto) throws PersistenciaException {
+        String anadirTransaccion = "INSERT INTO transacciones(monto, id_CuentaOrigen) values (?,?)";
+        String añadirTransferencia = "INSERT INTO transferencias(id_CuentaDestino) values (?)";
+        try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement statement = conexion.prepareStatement(insertCuenta, Statement.RETURN_GENERATED_KEYS)) {
 
-            } else {
-                throw new PersistenciaException("Hubo un error");
+        }
+        }
+
+        @Override
+        public BigDecimal consultarSaldo
+        (CuentaDTO cuenta) throws PersistenciaException {
+            String consultaSaldo = "Select saldo from cuentas where numeroCuenta=?";
+            BigDecimal saldoDisponible = null;
+            try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement consulta = conexion.prepareStatement(consultaSaldo)) {
+                consulta.setString(1, cuenta.getNumeroCuenta());
+                ResultSet resultado = consulta.executeQuery();
+                if (resultado.next()) {
+                    saldoDisponible = resultado.getBigDecimal("saldo");
+                    return saldoDisponible;
+
+                } else {
+                    throw new PersistenciaException("Hubo un error");
+                }
+            } catch (SQLException e) {
+                throw new PersistenciaException("Error" + e.getMessage());
             }
-        } catch (SQLException e) {
-            throw new PersistenciaException("Error" + e.getMessage());
         }
-    }
 
-    public void retiroSinCuenta(CuentaEntidad cuenta1, double monto) {
-aaaaaaaa
+    
+
+    public void retiroSinCuenta(CuentaEntidad cuenta1, double monto) throws PersistenciaException {
+        String IniciarTransaccion = "START transaction";
+        String SacarDinero = "UPDATE cuentas set saldo= saldo-? WHERE numeroCuenta=? ";
+        String ObtenerDinero = "UPDATE cuentas set saldo= saldo+? WHERE numeroCuenta=? ";
+        String cancelarTransaccion = "ROLLBACK";
+        String finalizarTransaccion = "COMMIT";
+
     }
 }

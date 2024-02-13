@@ -27,8 +27,8 @@ public class ProyectoBD1 {
 IConexionBD c = new ConexionBD();
         try {
             c.obtenerConexion();
-CuentaDAO a = new CuentaDAO();
- a.transaccion(new CuentaDTO(1, "1234567890"), new CuentaDTO(2, "0987654321"), 1000.0);
+CuentaDAO a = new CuentaDAO(c);
+ a.transaccion(new CuentaDTO(1, "1234567890"), new CuentaDTO(2, "0987654321"), 10000.0);
         } catch (SQLException ex) {
             Logger.getLogger(ProyectoBD1.class.getName()).log(Level.SEVERE, null, ex);
         } catch (PersistenciaException ex) {

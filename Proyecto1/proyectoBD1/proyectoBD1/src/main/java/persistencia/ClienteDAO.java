@@ -12,19 +12,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
+import persistencia.Interfaces.IConexionBD;
 
 /**
  *
  * @author Usuario
  */
 public class ClienteDAO implements IClienteDAO {
+    
+    private IConexionBD conexionBD;
+
+    public ClienteDAO(IConexionBD conexion) {
+        this.conexionBD = conexion;
+    }
+    
 
     // Método para actualizar un cliente en la base de datos
     @Override
     public void editar(ClienteEntidad cliente) throws PersistenciaException {
         // Definir la consulta SQL para actualizar un cliente en la tabla 'clientes'
-        String updateCliente = "UPDATE Clientes SET Nombre = ?, NomUsuario = ?, Contraseña = ?, ApellidoPa = ?, ApellidoMa = ?, FechaNacimiento = ?, Domicilio = ? WHERE ID = ?";
-        ConexionBD conexionBD = new ConexionBD();
+        String updateCliente = "UPDATE Clientes SET nombre = ?, nomUsuario = ?, contraseña = ?, apellidoPa = ?, apellidoMa = ?, FechaNacimiento = ?, Domicilio = ? WHERE ID = ?";
         try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement statement = conexion.prepareStatement(updateCliente)) {
 
             statement.setString(1, cliente.getNombre());
@@ -32,6 +39,7 @@ public class ClienteDAO implements IClienteDAO {
             statement.setString(3, cliente.getContraseña());
             statement.setString(4, cliente.getApellidoPa());
             statement.setString(5, cliente.getApellidoMa());
+            statement.setDate(6, new java.sql.Date(cliente.getFechaNacimiento().getTime()));
             statement.setString(7, cliente.getDomicilio());
             statement.setInt(8, cliente.getIdCliente());
             int filasAfectadas = statement.executeUpdate();
@@ -39,7 +47,7 @@ public class ClienteDAO implements IClienteDAO {
             if (filasAfectadas > 0) {
                 System.out.println("Cliente actualizado correctamente.");
             } else {
-                System.out.println("No se encontró el cliente con ID: " + cliente.getIdCliente());
+            throw new PersistenciaException("No se encontró el cliente con ID: " + cliente.getIdCliente());
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -51,8 +59,7 @@ public class ClienteDAO implements IClienteDAO {
     @Override
     public void agregar(ClienteEntidad cliente) throws PersistenciaException {
         // Definir la consulta SQL para insertar un nuevo cliente en la tabla 'clientes'
-        String insertCliente = "INSERT INTO Clientes (Nombre, NomUsuario, Contraseña, ApellidoPa, ApellidoMa, FechaNacimiento, Domicilio) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        ConexionBD conexionBD = new ConexionBD();
+        String insertCliente = "INSERT INTO Clientes (nombre, nomUsuario, contraseña, apellidoPa, apellidoMa, fechaNacimiento, domicilio) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement statement = conexion.prepareStatement(insertCliente)) {
 
             statement.setString(1, cliente.getNombre());
@@ -81,7 +88,6 @@ public class ClienteDAO implements IClienteDAO {
         // Consulta SQL para verificar las credenciales de inicio de sesión del cliente
         ClienteEntidad cliente = null;
         String consulta = "SELECT * FROM Clientes WHERE NomUsuario = ? AND Contraseña = ?";
-        ConexionBD conexionBD = new ConexionBD();
         try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement statement = conexion.prepareStatement(consulta)) {
             statement.setString(1, nombreUsuario);
             statement.setString(2, contraseña);

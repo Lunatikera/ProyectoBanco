@@ -21,7 +21,9 @@ public interface ICuentaDAO {
 
     public void cancelarCuenta(CuentaEntidad cliente) throws PersistenciaException;
 
-    public void transaccion(CuentaDTO cuenta1, CuentaDTO cuenta2, double monto) throws PersistenciaException;
+    public void transferencia(CuentaDTO cuenta1, CuentaDTO cuenta2, double monto) throws PersistenciaException;
 
     public BigDecimal consultarSaldo(CuentaDTO cuenta) throws PersistenciaException;
+    
+    public void retiroSinCuenta(CuentaEntidad cuenta1, double monto) throws PersistenciaException;
 }

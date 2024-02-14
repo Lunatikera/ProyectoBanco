@@ -20,12 +20,15 @@ import persistencia.PersistenciaException;
  * @author Usuario
  */
 public class LoginForm extends javax.swing.JFrame {
- private IClienteNegocio clienteNegocio;
+
+    private IClienteNegocio clienteNegocio;
+
     /**
      * Creates new form LoginForm
      */
     public LoginForm(IClienteNegocio clienteNegocio) {
         initComponents();
+        this.clienteNegocio = clienteNegocio;
         this.setLocationRelativeTo(this);
     }
 
@@ -41,14 +44,15 @@ public class LoginForm extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        InicioSesion = new javax.swing.JLabel();
         btnRegistrarse = new javax.swing.JButton();
         txtRegistro = new javax.swing.JLabel();
         contraseñaTxt = new javax.swing.JPasswordField();
         btnLoggin = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
+        InicioSesion = new javax.swing.JLabel();
         nombreUsuariojText = new javax.swing.JTextField();
         RetirarSinCuentaButton = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
 
@@ -61,11 +65,6 @@ public class LoginForm extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(87, 87, 86));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        InicioSesion.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
-        InicioSesion.setForeground(new java.awt.Color(224, 224, 224));
-        InicioSesion.setText("Iniciar Sesión");
-        jPanel2.add(InicioSesion, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 80, 200, 100));
 
         btnRegistrarse.setBackground(new java.awt.Color(108, 142, 132));
         btnRegistrarse.setForeground(new java.awt.Color(224, 224, 224));
@@ -84,11 +83,6 @@ public class LoginForm extends javax.swing.JFrame {
 
         contraseñaTxt.setBackground(new java.awt.Color(224, 224, 224));
         contraseñaTxt.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        contraseñaTxt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                contraseñaTxtActionPerformed(evt);
-            }
-        });
         jPanel2.add(contraseñaTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 240, 150, 30));
 
         btnLoggin.setBackground(new java.awt.Color(108, 142, 132));
@@ -102,18 +96,18 @@ public class LoginForm extends javax.swing.JFrame {
         jPanel2.add(btnLoggin, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 300, 150, 30));
 
         jLabel8.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        jLabel8.setText("Contraseña");
-        jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 220, -1, -1));
+        jLabel8.setText("Usuario");
+        jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 160, -1, -1));
+
+        InicioSesion.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
+        InicioSesion.setForeground(new java.awt.Color(224, 224, 224));
+        InicioSesion.setText("Iniciar Sesión");
+        jPanel2.add(InicioSesion, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 80, 200, 100));
 
         nombreUsuariojText.setBackground(new java.awt.Color(224, 224, 224));
         nombreUsuariojText.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         nombreUsuariojText.setForeground(new java.awt.Color(196, 196, 196));
         nombreUsuariojText.setText("Nombre Usuario");
-        nombreUsuariojText.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                nombreUsuariojTextMouseClicked(evt);
-            }
-        });
         jPanel2.add(nombreUsuariojText, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 180, 150, 30));
 
         RetirarSinCuentaButton.setBackground(new java.awt.Color(102, 102, 102));
@@ -125,6 +119,10 @@ public class LoginForm extends javax.swing.JFrame {
             }
         });
         jPanel2.add(RetirarSinCuentaButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 350, 180, 40));
+
+        jLabel9.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel9.setText("Contraseña");
+        jPanel2.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 220, -1, -1));
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 0, 440, 530));
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 90, -1, -1));
@@ -148,7 +146,7 @@ public class LoginForm extends javax.swing.JFrame {
 
     private void btnRegistrarseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarseActionPerformed
 
-        CreacionCuentaInfoForm registrarse = new CreacionCuentaInfoForm();
+        CreacionCuentaInfoForm registrarse = new CreacionCuentaInfoForm(clienteNegocio);
 
         registrarse.setVisible(true);
     }//GEN-LAST:event_btnRegistrarseActionPerformed
@@ -157,29 +155,26 @@ public class LoginForm extends javax.swing.JFrame {
 // Obtener el nombre de usuario y la contraseña ingresados por el usuario
         String nombreUsuario = nombreUsuariojText.getText();
         String contraseña = new String(contraseñaTxt.getPassword());
-        
+
         try {
-                    ClienteEntidad clienteAutenticado = clienteNegocio.iniciarSesion(nombreUsuario, contraseña);
-                    
-                    JOptionPane.showMessageDialog(null, "Bienvenido, " + clienteAutenticado.getNombre(), "Login exitoso", JOptionPane.INFORMATION_MESSAGE);
-                } catch (NegocioException ex) {
-                    JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Error de login", JOptionPane.ERROR_MESSAGE);
-                }
-    
+            ClienteEntidad clienteAutenticado = clienteNegocio.iniciarSesion(nombreUsuario, contraseña);
+            JOptionPane.showMessageDialog(null, "Bienvenido, " + clienteAutenticado.getNombre(), "Login exitoso", JOptionPane.INFORMATION_MESSAGE);
+            MenuPrincipalForm menu = new MenuPrincipalForm();
+            menu.setVisible(true);
+            this.dispose();
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Error de login", JOptionPane.ERROR_MESSAGE);
+        }
+
+
     }//GEN-LAST:event_btnLogginActionPerformed
-
-    private void contraseñaTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contraseñaTxtActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_contraseñaTxtActionPerformed
-
-    private void nombreUsuariojTextMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nombreUsuariojTextMouseClicked
-        nombreUsuariojText.setText("");
-    }//GEN-LAST:event_nombreUsuariojTextMouseClicked
 
     private void RetirarSinCuentaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RetirarSinCuentaButtonActionPerformed
         // TODO add your handling code here:
+        RetiroSinCuentaForm retiroSinCuenta=new RetiroSinCuentaForm();
+        retiroSinCuenta.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_RetirarSinCuentaButtonActionPerformed
-
 
     /**
      * @param args the command line arguments
@@ -195,6 +190,7 @@ public class LoginForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField nombreUsuariojText;

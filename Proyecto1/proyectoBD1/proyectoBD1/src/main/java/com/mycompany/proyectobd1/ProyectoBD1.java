@@ -11,6 +11,8 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import negocio.ClienteNegocio;
+import negocio.IClienteNegocio;
 import persistencia.ClienteDAO;
 import persistencia.ConexionBD;
 import persistencia.CuentaDAO;
@@ -26,29 +28,12 @@ import persistencia.PersistenciaException;
 public class ProyectoBD1 {
 
     public static void main(String[] args) {
-        
-        IConexionBD c = new ConexionBD();
-        try {
-            c.obtenerConexion();
-            IClienteDAO b= new ClienteDAO(c);
-            Date fechaActual=new Date();
-            ClienteEntidad cliente=new ClienteEntidad( "Luis", "Sunshine", "lola", "Burgueno", "Escalante", fechaActual, "calle 14");
-           // b.agregar(cliente);
-           b.iniciarSesion("Sunshine", "lola");
-           b.editar(cliente);
-            
-            //ICuentaDAO a = new CuentaDAO(c);
-            //a.transferencia(new CuentaDTO(1, "1234567890"), new CuentaDTO(2, "0987654321"), 100.0);
-            //a.generarRetiroSinCuenta(new CuentaDTO(1, "1234567890"), 200.00);
-            //a.disponerDineroRetiro("10506", "15904");
-            
+        IConexionBD conexionBD = new ConexionBD();
+        IClienteDAO clienteDAO = new ClienteDAO(conexionBD);
+        IClienteNegocio clienteNegocio = new ClienteNegocio(clienteDAO);
 
-        }catch (PersistenciaException ex) {
-            System.out.println(ex.getMessage());
-            Logger.getLogger(ProyectoBD1.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(ProyectoBD1.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        LoginForm login = new LoginForm(clienteNegocio);
+        login.show();
 
     }
 }

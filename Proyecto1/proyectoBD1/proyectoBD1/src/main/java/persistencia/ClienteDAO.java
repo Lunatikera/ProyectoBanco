@@ -11,6 +11,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import persistencia.Interfaces.IConexionBD;
 
@@ -30,7 +32,7 @@ public class ClienteDAO implements IClienteDAO {
     @Override
     public void editar(ClienteEntidad cliente) throws PersistenciaException {
         // Definir la consulta SQL para actualizar un cliente en la tabla 'clientes'
-        String updateCliente = "UPDATE Clientes SET nombre = ?, contraseña = ?, apellidoPa = ?, apellidoMa = ?, FechaNacimiento = ?, Domicilio = ? WHERE ID = ?";
+        String updateCliente = "UPDATE Clientes SET nombre = ?, contraseña = ?, apellidoPa = ?, apellidoMa = ?, Domicilio = ? WHERE ID = ?";
         try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement statement = conexion.prepareStatement(updateCliente)) {
 
             statement.setString(1, cliente.getNombre());
@@ -38,7 +40,6 @@ public class ClienteDAO implements IClienteDAO {
             statement.setString(3, cliente.getContraseña());
             statement.setString(4, cliente.getApellidoPa());
             statement.setString(5, cliente.getApellidoMa());
-            statement.setDate(6, new java.sql.Date(cliente.getFechaNacimiento().getTime()));
             statement.setString(7, cliente.getDomicilio());
             statement.setInt(8, cliente.getIdCliente());
             int filasAfectadas = statement.executeUpdate();
@@ -66,7 +67,7 @@ public class ClienteDAO implements IClienteDAO {
             statement.setString(3, cliente.getContraseña());
             statement.setString(4, cliente.getApellidoPa());
             statement.setString(5, cliente.getApellidoMa());
-            statement.setDate(6, new java.sql.Date(cliente.getFechaNacimiento().getTime()));
+            statement.setString(6, convertirFechaATexto(cliente.getFechaNacimiento()));
             statement.setString(7, cliente.getDomicilio());
 
             int filasAfectadas = statement.executeUpdate();
@@ -126,9 +127,23 @@ public class ClienteDAO implements IClienteDAO {
         String contraseña = resultado.getString("contraseña");
         String apellidoPa = resultado.getString("apellidoPa");
         String apellidoMa = resultado.getString("apellidoMa");
-        Date fechaNacimiento = resultado.getDate("fechaNacimiento");
+        String fechaNacimiento = resultado.getString("fechaNacimiento");
         String domicilio = resultado.getString("domicilio");
-        return new ClienteEntidad(idCliente, nombre, nomUsuario, contraseña, apellidoPa, apellidoMa, fechaNacimiento, domicilio);
+        return new ClienteEntidad(idCliente, nombre, nomUsuario, contraseña, apellidoPa, apellidoMa, this.convertirTextoAFecha(fechaNacimiento), domicilio);
+    }
+
+    private LocalDate convertirTextoAFecha(String fecha) {
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate fechalocal = LocalDate.parse(fecha, formato);
+        return fechalocal;
+
+    }
+
+    private String convertirFechaATexto(LocalDate fecha) {
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String fechaComoTexto = fecha.format(formato);
+        return fechaComoTexto;
+
     }
 
 }

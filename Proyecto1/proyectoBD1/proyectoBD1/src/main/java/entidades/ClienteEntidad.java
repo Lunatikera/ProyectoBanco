@@ -21,12 +21,12 @@ public class ClienteEntidad {
     private String contraseña;
     private String apellidoPa;
     private String apellidoMa;
-    private Date fechaNacimiento;
+    private LocalDate fechaNacimiento;
     private String domicilio;
 
     // Constructor
     public ClienteEntidad(int idCliente, String nombre, String nomUsuario, String contraseña, String apellidoPa,
-            String apellidoMa, Date fechaNacimiento, String domicilio) {
+            String apellidoMa, LocalDate fechaNacimiento, String domicilio) {
         this.idCliente = idCliente;
         this.nombre = nombre;
         this.nomUsuario = nomUsuario;
@@ -37,13 +37,12 @@ public class ClienteEntidad {
         this.domicilio = domicilio;
     }
 
-    public ClienteEntidad(String nombre, String nomUsuario, String contraseña, String apellidoPa, String apellidoMa, Date fechaNacimiento, String domicilio) {
+    public ClienteEntidad(String nombre, String nomUsuario, String contraseña, String apellidoPa, String apellidoMa,LocalDate fechaNacimiento,String domicilio) {
         this.nombre = nombre;
         this.nomUsuario = nomUsuario;
         this.contraseña = contraseña;
         this.apellidoPa = apellidoPa;
         this.apellidoMa = apellidoMa;
-        this.fechaNacimiento = fechaNacimiento;
         this.domicilio = domicilio;
     }
    
@@ -100,11 +99,11 @@ public class ClienteEntidad {
         this.apellidoMa = apellidoMa;
     }
 
-    public Date getFechaNacimiento() {
+    public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(Date fechaNacimiento) {
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 
@@ -118,7 +117,6 @@ public class ClienteEntidad {
 
     public int getEdad() {
         LocalDate fechaActual = LocalDate.now();
-        LocalDate fechaNacimiento = getFechaNacimiento().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         Period periodo = Period.between(fechaNacimiento, fechaActual);
         int edad= periodo.getYears();
         return edad;

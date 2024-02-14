@@ -24,4 +24,6 @@ public interface ICuentaNegocio {
     public void generarRetiroSinCuenta(CuentaDTO cuentaOrigen, double monto) throws NegocioException;
 
     public void disponerDineroRetiro(String folio, String contraseña) throws NegocioException;
+    
+    
 }

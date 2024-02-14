@@ -69,7 +69,7 @@ public class ClienteNegocio implements IClienteNegocio {
 
     private void nombreUsuarioNoRepetido(ClienteEntidad cliente) throws NegocioException {
         try {
-            if (clienteDAO.existeNombreUsuario(cliente.getNomUsuario()))   {
+            if (clienteDAO.existeNombreUsuario(cliente.getNomUsuario())) {
                 throw new NegocioException("Nombre de usuario ya esta en uso");
 
             }
@@ -84,6 +84,7 @@ public class ClienteNegocio implements IClienteNegocio {
         this.verificarCamposVacios(cliente);
         this.verificarTextoCliente(cliente);
         this.edadMinima(cliente);
+        this.nombreUsuarioNoRepetido(cliente);
         try {
             clienteDAO.agregar(cliente);
         } catch (PersistenciaException e) {
@@ -91,12 +92,25 @@ public class ClienteNegocio implements IClienteNegocio {
         }
     }
 
+    private void validacionIniciarSesion(String nombreUsuario, String contraseña) throws NegocioException {
+        if (nombreUsuario == null || nombreUsuario.isEmpty() || contraseña == null || contraseña.isEmpty()) {
+            throw new NegocioException("El nombre de usuario y la contraseña son obligatorios.");
+        }
+    }
+
     @Override
     public ClienteEntidad iniciarSesion(String nombreUsuario, String contraseña) throws NegocioException {
+        this.validacionIniciarSesion(nombreUsuario, contraseña);
         try {
-            return clienteDAO.iniciarSesion(nombreUsuario, contraseña);
+            ClienteEntidad cliente = clienteDAO.iniciarSesion(nombreUsuario, contraseña);
+            if (cliente == null) {
+                throw new NegocioException("Credenciales de inicio de sesión inválidas.");
+            }
+            return cliente;
         } catch (PersistenciaException e) {
+
             throw new NegocioException("Error al iniciar sesión", e);
         }
+
     }
 }

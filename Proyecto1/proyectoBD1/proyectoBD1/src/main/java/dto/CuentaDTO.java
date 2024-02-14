@@ -9,12 +9,17 @@ package dto;
  * @author Usuario
  */
 public class CuentaDTO {
+
     private int idCliente;
     private String numeroCuenta;
 
     public CuentaDTO(int idCliente, String numCuenta) {
         this.idCliente = idCliente;
         this.numeroCuenta = numCuenta;
+    }
+
+    public CuentaDTO() {
+
     }
 
     public int getIdCliente() {
@@ -37,6 +42,5 @@ public class CuentaDTO {
     public String toString() {
         return numeroCuenta;
     }
-    
-    
+
 }

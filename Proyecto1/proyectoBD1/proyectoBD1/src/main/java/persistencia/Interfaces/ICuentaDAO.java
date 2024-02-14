@@ -31,4 +31,8 @@ public interface ICuentaDAO {
     public void disponerDineroRetiro(String folio, String contraseña) throws PersistenciaException;
     
     public TransaccionDTO obtenerDatos(String folio, String contraseña) throws PersistenciaException;
+    
+    public boolean existeNumeroCuenta(String numeroCuenta) throws PersistenciaException;
+    
+    public boolean existeFolio(String folio) throws PersistenciaException;
 }

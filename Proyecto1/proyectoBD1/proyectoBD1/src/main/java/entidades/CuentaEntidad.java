@@ -31,6 +31,10 @@ public class CuentaEntidad {
         this.nip = nip;
         this.idCliente = idCliente;
     }
+    
+    public CuentaEntidad(){
+        
+    }
 
     // Getters and Setters
     public int getIdCuenta() {

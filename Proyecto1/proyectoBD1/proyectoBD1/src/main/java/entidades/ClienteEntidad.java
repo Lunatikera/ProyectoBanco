@@ -46,7 +46,7 @@ public class ClienteEntidad {
         this.fechaNacimiento = fechaNacimiento;
         this.domicilio = domicilio;
     }
-    
+   
 
     public ClienteEntidad() {
     }

@@ -10,8 +10,11 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import negocio.IClienteNegocio;
+import negocio.ICuentaNegocio;
 import negocio.NegocioException;
 import persistencia.ClienteDAO;
 import persistencia.ConexionBD;
@@ -29,6 +32,7 @@ public class CreacionCuentaInfoForm extends javax.swing.JFrame {
      */
     public CreacionCuentaInfoForm(IClienteNegocio clienteNegocio) {
         this.clienteNegocio = clienteNegocio;
+
         initComponents();
 
     }
@@ -44,8 +48,6 @@ public class CreacionCuentaInfoForm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        RegistrarApellidoMajText1 = new javax.swing.JTextField();
-        jSpinner4 = new javax.swing.JSpinner();
         jPanel1 = new javax.swing.JPanel();
         FondoV = new javax.swing.JPanel();
         RegistrarNombrejText1 = new javax.swing.JTextField();
@@ -54,23 +56,12 @@ public class CreacionCuentaInfoForm extends javax.swing.JFrame {
         RegistrarApellidoMajText2 = new javax.swing.JTextField();
         FondorResgistrate = new javax.swing.JLabel();
         SiguienteButton1 = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
         RegistrarDomiciliojText1 = new javax.swing.JTextField();
         NombreUsuariojText = new javax.swing.JTextField();
         RegistrarContraseñajText = new javax.swing.JPasswordField();
-        ConfirmarContraseñajText = new javax.swing.JPasswordField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-
-        RegistrarApellidoMajText1.setBackground(new java.awt.Color(224, 224, 224));
-        RegistrarApellidoMajText1.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        RegistrarApellidoMajText1.setForeground(new java.awt.Color(196, 196, 196));
-        RegistrarApellidoMajText1.setText("Segundo Apellido");
-        RegistrarApellidoMajText1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RegistrarApellidoMajText1ActionPerformed(evt);
-            }
-        });
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -97,64 +88,24 @@ public class CreacionCuentaInfoForm extends javax.swing.JFrame {
         RegistrarNombrejText1.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         RegistrarNombrejText1.setForeground(new java.awt.Color(196, 196, 196));
         RegistrarNombrejText1.setText("Nombre");
-        RegistrarNombrejText1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                RegistrarNombrejText1MouseClicked(evt);
-            }
-        });
-        RegistrarNombrejText1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RegistrarNombrejText1ActionPerformed(evt);
-            }
-        });
         jPanel1.add(RegistrarNombrejText1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 120, 150, 30));
 
         FechaNtext.setBackground(new java.awt.Color(224, 224, 224));
         FechaNtext.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         FechaNtext.setForeground(new java.awt.Color(196, 196, 196));
         FechaNtext.setText("AAAA-MM-DD");
-        FechaNtext.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                FechaNtextMouseClicked(evt);
-            }
-        });
-        FechaNtext.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                FechaNtextActionPerformed(evt);
-            }
-        });
         jPanel1.add(FechaNtext, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 370, 150, 30));
 
         RegistrarApellidoPajText1.setBackground(new java.awt.Color(224, 224, 224));
         RegistrarApellidoPajText1.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         RegistrarApellidoPajText1.setForeground(new java.awt.Color(196, 196, 196));
         RegistrarApellidoPajText1.setText("Primer Apellido");
-        RegistrarApellidoPajText1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                RegistrarApellidoPajText1MouseClicked(evt);
-            }
-        });
-        RegistrarApellidoPajText1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RegistrarApellidoPajText1ActionPerformed(evt);
-            }
-        });
         jPanel1.add(RegistrarApellidoPajText1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 180, 150, 30));
 
         RegistrarApellidoMajText2.setBackground(new java.awt.Color(224, 224, 224));
         RegistrarApellidoMajText2.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         RegistrarApellidoMajText2.setForeground(new java.awt.Color(196, 196, 196));
         RegistrarApellidoMajText2.setText("Segundo Apellido");
-        RegistrarApellidoMajText2.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                RegistrarApellidoMajText2MouseClicked(evt);
-            }
-        });
-        RegistrarApellidoMajText2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RegistrarApellidoMajText2ActionPerformed(evt);
-            }
-        });
         jPanel1.add(RegistrarApellidoMajText2, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 240, 150, 30));
 
         FondorResgistrate.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
@@ -171,59 +122,21 @@ public class CreacionCuentaInfoForm extends javax.swing.JFrame {
         });
         jPanel1.add(SiguienteButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 430, 100, 30));
 
-        jLabel2.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        jLabel2.setText("Confirmar Contraseña");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 220, -1, -1));
-
         RegistrarDomiciliojText1.setBackground(new java.awt.Color(224, 224, 224));
         RegistrarDomiciliojText1.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         RegistrarDomiciliojText1.setForeground(new java.awt.Color(196, 196, 196));
         RegistrarDomiciliojText1.setText("Domicilio");
-        RegistrarDomiciliojText1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                RegistrarDomiciliojText1MouseClicked(evt);
-            }
-        });
-        RegistrarDomiciliojText1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RegistrarDomiciliojText1ActionPerformed(evt);
-            }
-        });
         jPanel1.add(RegistrarDomiciliojText1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 300, 150, 30));
 
         NombreUsuariojText.setBackground(new java.awt.Color(224, 224, 224));
         NombreUsuariojText.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         NombreUsuariojText.setForeground(new java.awt.Color(196, 196, 196));
         NombreUsuariojText.setText("Nombre Usuario");
-        NombreUsuariojText.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                NombreUsuariojTextMouseClicked(evt);
-            }
-        });
-        NombreUsuariojText.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                NombreUsuariojTextActionPerformed(evt);
-            }
-        });
         jPanel1.add(NombreUsuariojText, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 120, 150, 30));
 
         RegistrarContraseñajText.setBackground(new java.awt.Color(224, 224, 224));
         RegistrarContraseñajText.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        RegistrarContraseñajText.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RegistrarContraseñajTextActionPerformed(evt);
-            }
-        });
         jPanel1.add(RegistrarContraseñajText, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 180, 150, 30));
-
-        ConfirmarContraseñajText.setBackground(new java.awt.Color(224, 224, 224));
-        ConfirmarContraseñajText.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        ConfirmarContraseñajText.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ConfirmarContraseñajTextActionPerformed(evt);
-            }
-        });
-        jPanel1.add(ConfirmarContraseñajText, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 240, 150, 30));
 
         jLabel3.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         jLabel3.setText("Contraseña");
@@ -232,6 +145,10 @@ public class CreacionCuentaInfoForm extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         jLabel4.setText("Fecha de Nacimiento");
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 350, -1, -1));
+
+        jLabel5.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel5.setText("Contraseña");
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 160, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -247,41 +164,8 @@ public class CreacionCuentaInfoForm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void FechaNtextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FechaNtextActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_FechaNtextActionPerformed
-
-    private void RegistrarNombrejText1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegistrarNombrejText1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_RegistrarNombrejText1ActionPerformed
-
-    private void RegistrarApellidoPajText1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegistrarApellidoPajText1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_RegistrarApellidoPajText1ActionPerformed
-
-    private void RegistrarApellidoMajText1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegistrarApellidoMajText1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_RegistrarApellidoMajText1ActionPerformed
-
-    private void RegistrarApellidoMajText2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegistrarApellidoMajText2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_RegistrarApellidoMajText2ActionPerformed
-
-    private void SiguienteButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SiguienteButton1ActionPerformed
-        // TODO add your handling code here:
-        String nombre = RegistrarNombrejText1.getText();
-        String contrasena = new String(RegistrarContraseñajText.getPassword());
-        String apellidoPa = RegistrarApellidoPajText1.getText();
-        String apellidoMa = RegistrarApellidoMajText2.getText();
-        String domicilio = RegistrarDomiciliojText1.getText();
-        String fechaNacimiento = FechaNtext.getText();
-        String nombreUsuario = NombreUsuariojText.getText();
-        String confirmarContrasena = new String(ConfirmarContraseñajText.getPassword());
-
-        DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate fechalocal = LocalDate.parse(fechaNacimiento, formato);
+    private void RegistrarCliente(ClienteEntidad cliente) throws PresentacionException {
         try {
-            ClienteEntidad cliente = new ClienteEntidad( nombre, nombreUsuario, contrasena, apellidoPa, apellidoMa, fechalocal, domicilio);
             this.clienteNegocio.agregarCliente(cliente);
             JOptionPane.showMessageDialog(null, "en horabuena, " + cliente.getNombre(), "Se ha registrado con exito", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
@@ -289,72 +173,54 @@ public class CreacionCuentaInfoForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Error de registro", JOptionPane.ERROR_MESSAGE);
 
         }
+    }
 
-        // VALIDACIONES DENTRO DEL METODO AGREGAR
+    private LocalDate convertirFecha(String fecha) {
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate fechalocal = LocalDate.parse(fecha, formato);
+        return fechalocal;
+
+    }
+    private void SiguienteButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SiguienteButton1ActionPerformed
+
+        String nombre = RegistrarNombrejText1.getText();
+        String contrasena = new String(RegistrarContraseñajText.getPassword());
+        String apellidoPa = RegistrarApellidoPajText1.getText();
+        String apellidoMa = RegistrarApellidoMajText2.getText();
+        String domicilio = RegistrarDomiciliojText1.getText();
+        String fechaNacimientoString = FechaNtext.getText();
+        String nombreUsuario = NombreUsuariojText.getText();
+
+        LocalDate fechaNacimiento=convertirFecha(fechaNacimientoString);
+
+        ClienteEntidad cliente = new ClienteEntidad(nombre, nombreUsuario, contrasena, apellidoPa, apellidoMa, fechaNacimiento, domicilio);
+
+        try {
+            this.RegistrarCliente(cliente);
+        } catch (PresentacionException ex) {
+            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Error de registro", JOptionPane.ERROR_MESSAGE);
+        }
 
     }//GEN-LAST:event_SiguienteButton1ActionPerformed
-
-    private void RegistrarDomiciliojText1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegistrarDomiciliojText1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_RegistrarDomiciliojText1ActionPerformed
-
-    private void NombreUsuariojTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NombreUsuariojTextActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_NombreUsuariojTextActionPerformed
-
-    private void RegistrarContraseñajTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegistrarContraseñajTextActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_RegistrarContraseñajTextActionPerformed
-
-    private void ConfirmarContraseñajTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConfirmarContraseñajTextActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_ConfirmarContraseñajTextActionPerformed
-
-    private void RegistrarNombrejText1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RegistrarNombrejText1MouseClicked
-        RegistrarNombrejText1.setText("");
-    }//GEN-LAST:event_RegistrarNombrejText1MouseClicked
-
-    private void RegistrarApellidoPajText1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RegistrarApellidoPajText1MouseClicked
-        RegistrarApellidoPajText1.setText("");
-    }//GEN-LAST:event_RegistrarApellidoPajText1MouseClicked
-
-    private void FechaNtextMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_FechaNtextMouseClicked
-        FechaNtext.setText("");
-    }//GEN-LAST:event_FechaNtextMouseClicked
-
-    private void RegistrarApellidoMajText2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RegistrarApellidoMajText2MouseClicked
-        RegistrarApellidoMajText2.setText("");
-    }//GEN-LAST:event_RegistrarApellidoMajText2MouseClicked
-
-    private void RegistrarDomiciliojText1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RegistrarDomiciliojText1MouseClicked
-        RegistrarDomiciliojText1.setText("");
-    }//GEN-LAST:event_RegistrarDomiciliojText1MouseClicked
-
-    private void NombreUsuariojTextMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_NombreUsuariojTextMouseClicked
-        NombreUsuariojText.setText("");
-    }//GEN-LAST:event_NombreUsuariojTextMouseClicked
 
     /**
      * @param args the command line arguments
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPasswordField ConfirmarContraseñajText;
     private javax.swing.JTextField FechaNtext;
     private javax.swing.JPanel FondoV;
     private javax.swing.JLabel FondorResgistrate;
     private javax.swing.JTextField NombreUsuariojText;
-    private javax.swing.JTextField RegistrarApellidoMajText1;
     private javax.swing.JTextField RegistrarApellidoMajText2;
     private javax.swing.JTextField RegistrarApellidoPajText1;
     private javax.swing.JPasswordField RegistrarContraseñajText;
     private javax.swing.JTextField RegistrarDomiciliojText1;
     private javax.swing.JTextField RegistrarNombrejText1;
     private javax.swing.JButton SiguienteButton1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JSpinner jSpinner4;
     // End of variables declaration//GEN-END:variables
 }

@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import negocio.IClienteNegocio;
+import negocio.ICuentaNegocio;
 import negocio.NegocioException;
 import persistencia.ClienteDAO;
 import persistencia.ConexionBD;
@@ -22,13 +23,16 @@ import persistencia.PersistenciaException;
 public class LoginForm extends javax.swing.JFrame {
 
     private IClienteNegocio clienteNegocio;
+    private ICuentaNegocio cuentaNegocio;
+    
 
     /**
      * Creates new form LoginForm
      */
-    public LoginForm(IClienteNegocio clienteNegocio) {
+    public LoginForm(IClienteNegocio clienteNegocio, ICuentaNegocio cuentaNegocio) {
         initComponents();
         this.clienteNegocio = clienteNegocio;
+        this.cuentaNegocio= cuentaNegocio;
         this.setLocationRelativeTo(this);
     }
 
@@ -158,8 +162,9 @@ public class LoginForm extends javax.swing.JFrame {
 
         try {
             ClienteEntidad clienteAutenticado = clienteNegocio.iniciarSesion(nombreUsuario, contraseña);
+            System.out.println(clienteAutenticado.toString());
             JOptionPane.showMessageDialog(null, "Bienvenido, " + clienteAutenticado.getNombre(), "Login exitoso", JOptionPane.INFORMATION_MESSAGE);
-            MenuPrincipalForm menu = new MenuPrincipalForm();
+            MenuPrincipalForm menu = new MenuPrincipalForm(clienteNegocio, cuentaNegocio,clienteAutenticado);
             menu.setVisible(true);
             this.dispose();
         } catch (NegocioException ex) {

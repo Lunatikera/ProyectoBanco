@@ -14,7 +14,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.logging.Level;
@@ -29,7 +31,6 @@ import persistencia.Interfaces.ICuentaDAO;
 public class CuentaDAO implements ICuentaDAO {
 
     private IConexionBD conexionBD;
-    private static final Set<String> numerosGenerados = new HashSet<>();
 
     public CuentaDAO(IConexionBD conexionBD) {
         this.conexionBD = conexionBD;
@@ -38,14 +39,15 @@ public class CuentaDAO implements ICuentaDAO {
     @Override
     public void agregar(CuentaEntidad cuenta, ClienteEntidad cliente) throws PersistenciaException {
         // Definir la consulta SQL para insertar una nueva cuenta en la tabla 'Cuenta'
-        String insertCuenta = "INSERT INTO Cuentas (numeroCuenta, saldo, Nip, id_Cliente) VALUES (?, ?, ?, ?, ?)";
+        String insertCuenta = "INSERT INTO Cuentas (numeroCuenta, saldo, Nip, id_Cliente) VALUES (?, ?, ?, ?)";
         try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement statement = conexion.prepareStatement(insertCuenta)) {
             // Generar el número de cuenta automáticamente (puedes implementar la lógica para generarlo)
             String numeroCuenta = generarNumeroAleatorioUnico(); // Implementa este método según tu lógica de generación de número de cuenta
-            statement.setString(1, numeroCuenta);
-            statement.setBigDecimal(2,  cuenta.getSaldo());
-            statement.setString(5, cuenta.getNip());
-            statement.setInt(6, cliente.getIdCliente());
+            cuenta.setNumeroCuenta(numeroCuenta);
+            statement.setString(1, cuenta.getNumeroCuenta());
+            statement.setBigDecimal(2, cuenta.getSaldo());
+            statement.setString(3, cuenta.getNip());
+            statement.setInt(4, cliente.getIdCliente());
             int filasAfectadas = statement.executeUpdate();
             if (filasAfectadas > 0) {
                 System.out.println("Cuenta agregada correctamente.");
@@ -59,25 +61,42 @@ public class CuentaDAO implements ICuentaDAO {
     }
 
 // Método para generar el número de cuenta automáticamente
-     private static String generarNumeroAleatorioUnico() {
-    Random random = new Random();
-    StringBuilder numeroAleatorioBuilder = new StringBuilder();
-    
-    for (int i = 0; i < 16; i++) {
-        int digito = random.nextInt(10); // Genera un dígito aleatorio entre 0 y 9
-        numeroAleatorioBuilder.append(digito);
+    private String generarNumeroAleatorioUnico() throws PersistenciaException {
+        Random random = new Random();
+        StringBuilder numeroAleatorioBuilder = new StringBuilder();
+
+        for (int i = 0; i < 16; i++) {
+            int digito = random.nextInt(10); // Genera un dígito aleatorio entre 0 y 9
+            numeroAleatorioBuilder.append(digito);
+        }
+
+        String numeroAleatorio = numeroAleatorioBuilder.toString();
+
+        if (this.obtenerNumerosDeCuenta().contains(numeroAleatorio)) {
+            // Si el número generado ya existe, llama recursivamente al método para generar uno nuevo
+            return generarNumeroAleatorioUnico();
+        } else {
+            return numeroAleatorio;
+        }
     }
-    
-    String numeroAleatorio = numeroAleatorioBuilder.toString();
-    
-    if (numerosGenerados.contains(numeroAleatorio)) {
-        // Si el número generado ya existe, llama recursivamente al método para generar uno nuevo
-        return generarNumeroAleatorioUnico();
-    } else {
-        numerosGenerados.add(numeroAleatorio);
-        return numeroAleatorio;
+
+    private List<String> obtenerNumerosDeCuenta() throws PersistenciaException {
+        List<String> numerosDeCuenta = new ArrayList<>();
+
+        String selectQuery = "SELECT numeroCuenta FROM Cuentas";
+
+        try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement statement = conexion.prepareStatement(selectQuery);  ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                String numeroCuenta = resultSet.getString("numeroCuenta");
+                numerosDeCuenta.add(numeroCuenta);
+            }
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al obtener los números de cuenta: " + e.getMessage());
+        }
+
+        return numerosDeCuenta;
     }
-}
 
     @Override
     public void cancelarCuenta(CuentaEntidad cuenta) throws PersistenciaException {
@@ -88,7 +107,6 @@ public class CuentaDAO implements ICuentaDAO {
             statement.setString(1, cuenta.getNumeroCuenta());
             statement.setString(2, cuenta.getNip());
 
-         
             int filasAfectadas = statement.executeUpdate();
 
             if (filasAfectadas > 0) {
@@ -247,42 +265,65 @@ public class CuentaDAO implements ICuentaDAO {
             throw new PersistenciaException("Error al obtener los datos del retiro sin cuenta: " + ex.getMessage());
         }
     }
-    
+
     public boolean existeNumeroCuenta(String numeroCuenta) throws PersistenciaException {
-    String consulta = "SELECT COUNT(*) AS cuenta FROM Cuentas WHERE numeroCuenta = ?";
-    
-    try (Connection conexion = conexionBD.obtenerConexion();
-         PreparedStatement statement = conexion.prepareStatement(consulta)) {
-        
-        statement.setString(1, numeroCuenta);
-        ResultSet resultSet = statement.executeQuery();
-        
-        if (resultSet.next()) {
-            int cuenta = resultSet.getInt("cuenta");
-            return cuenta > 0;
-        } else {
-            return false;
+        String consulta = "SELECT COUNT(*) AS cuenta FROM Cuentas WHERE numeroCuenta = ?";
+
+        try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement statement = conexion.prepareStatement(consulta)) {
+
+            statement.setString(1, numeroCuenta);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                int cuenta = resultSet.getInt("cuenta");
+                return cuenta > 0;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al verificar la existencia del número de cuenta: " + e.getMessage());
         }
-    } catch (SQLException e) {
-        throw new PersistenciaException("Error al verificar la existencia del número de cuenta: " + e.getMessage());
     }
-}
-    
+
     public boolean existeFolio(String folio) throws PersistenciaException {
-    String consultaFolio = "SELECT COUNT(*) AS total FROM Transacciones WHERE folio = ?";
-    try (Connection conexion = conexionBD.obtenerConexion();
-         PreparedStatement statement = conexion.prepareStatement(consultaFolio)) {
-        statement.setString(1, folio);
-        ResultSet resultSet = statement.executeQuery();
-        if (resultSet.next()) {
-            int total = resultSet.getInt("total");
-            return total > 0; // Si el total es mayor que cero, significa que el folio existe
-        } else {
-            throw new PersistenciaException("Error al verificar la existencia del folio.");
+        String consultaFolio = "SELECT COUNT(*) AS total FROM Transacciones WHERE folio = ?";
+        try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement statement = conexion.prepareStatement(consultaFolio)) {
+            statement.setString(1, folio);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                int total = resultSet.getInt("total");
+                return total > 0; // Si el total es mayor que cero, significa que el folio existe
+            } else {
+                throw new PersistenciaException("Error al verificar la existencia del folio.");
+            }
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al verificar la existencia del folio: " + e.getMessage());
         }
-    } catch (SQLException e) {
-        throw new PersistenciaException("Error al verificar la existencia del folio: " + e.getMessage());
     }
-}
+
+    public List<CuentaEntidad> obtenerTodasLasCuentas(ClienteEntidad cliente) throws PersistenciaException {
+        List<CuentaEntidad> cuentas = new ArrayList<>();
+        String seleccionaCuenta = "SELECT numeroCuenta, saldo, Nip FROM Cuentas WHERE id_Cliente=?";
+
+        try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement consulta = conexion.prepareStatement(seleccionaCuenta)) {
+            consulta.setInt(1, cliente.getIdCliente());
+            ResultSet resultSet = consulta.executeQuery();
+
+            while (resultSet.next()) {
+                // Por cada registro de la tabla, creamos un objeto CuentaEntidad y lo agregamos a la lista
+                CuentaEntidad cuenta = new CuentaEntidad();
+               
+                cuenta.setNumeroCuenta(resultSet.getString("numeroCuenta"));
+                cuenta.setSaldo(resultSet.getBigDecimal("saldo"));
+                cuenta.setNip(resultSet.getString("Nip"));
+                cuenta.setIdCliente(cliente.getIdCliente());
+                cuentas.add(cuenta);
+            }
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al obtener todas las cuentas: " + e.getMessage());
+        }
+
+        return cuentas;
+    }
 
 }

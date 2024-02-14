@@ -12,7 +12,9 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import negocio.ClienteNegocio;
+import negocio.CuentaNegocio;
 import negocio.IClienteNegocio;
+import negocio.ICuentaNegocio;
 import persistencia.ClienteDAO;
 import persistencia.ConexionBD;
 import persistencia.CuentaDAO;
@@ -30,9 +32,11 @@ public class ProyectoBD1 {
     public static void main(String[] args) {
         IConexionBD conexionBD = new ConexionBD();
         IClienteDAO clienteDAO = new ClienteDAO(conexionBD);
+        ICuentaDAO cuentaDAO= new CuentaDAO(conexionBD);
         IClienteNegocio clienteNegocio = new ClienteNegocio(clienteDAO);
+        ICuentaNegocio cuentaNegocio=new CuentaNegocio(cuentaDAO);
 
-        LoginForm login = new LoginForm(clienteNegocio);
+        LoginForm login = new LoginForm(clienteNegocio,cuentaNegocio);
         login.show();
 
     }

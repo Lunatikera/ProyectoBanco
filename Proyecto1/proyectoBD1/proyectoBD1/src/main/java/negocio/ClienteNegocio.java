@@ -35,7 +35,7 @@ public class ClienteNegocio implements IClienteNegocio {
     private void verificarCamposVacios(ClienteEntidad cliente) throws NegocioException {
         if (cliente.getNombre() == null || cliente.getNombre().isEmpty() || cliente.getApellidoMa() == null || cliente.getApellidoMa().isEmpty()
                 || cliente.getApellidoPa() == null || cliente.getApellidoPa().isEmpty() || cliente.getContraseña() == null || cliente.getContraseña().isEmpty()
-                || cliente.getFechaNacimiento() == null || cliente.getDomicilio() == null || cliente.getDomicilio().isEmpty()) {
+                || cliente.getFechaNacimiento() == null|| cliente.getDomicilio() == null || cliente.getDomicilio().isEmpty()) {
             throw new NegocioException("Todos los campos son obligatorios.");
         }
     }

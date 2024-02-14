@@ -36,6 +36,14 @@ public class CuentaEntidad {
         
     }
 
+    public CuentaEntidad(int idCliente,BigDecimal saldo, String nip) {
+        this.idCliente=idCliente;
+        this.saldo = saldo;
+        this.nip = nip;
+    }
+    
+    
+
     // Getters and Setters
     public int getIdCuenta() {
         return idCuenta;

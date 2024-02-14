@@ -8,6 +8,7 @@ import dto.CuentaDTO;
 import entidades.ClienteEntidad;
 import entidades.CuentaEntidad;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import persistencia.Interfaces.ICuentaDAO;
@@ -36,17 +37,16 @@ public class CuentaNegocio implements ICuentaNegocio {
 
         this.validacionesCliente(cliente);
 
-        this.longitudNumeroCuenta(cuenta);
-
         this.saldoPositivo(cuenta);
-
-        this.cuentaUnica(cuenta);
 
         try {
             cuentaDAO.agregar(cuenta, cliente);
         } catch (PersistenciaException e) {
             throw new NegocioException("Error al agregar la cuenta", e);
         }
+
+        this.longitudNumeroCuenta(cuenta);
+
     }
 
     @Override
@@ -136,6 +136,21 @@ public class CuentaNegocio implements ICuentaNegocio {
         }
     }
 
+    public List<CuentaEntidad> obtenerTodasLasCuentas(ClienteEntidad cliente) throws NegocioException {
+        try {
+            List<CuentaEntidad> lista = cuentaDAO.obtenerTodasLasCuentas(cliente);
+            if (cliente == null) {
+                throw new NegocioException("Credenciales inválidas.");
+            }
+            return lista;
+        } catch (PersistenciaException e) {
+
+            throw new NegocioException("Error al iniciar sesión", e);
+        }
+
+    }
+
+      
     private void cuentaUnica(CuentaEntidad cuenta) throws NegocioException {
         try {
             if (cuentaDAO.existeNumeroCuenta(cuenta.getNumeroCuenta())) {
@@ -143,7 +158,7 @@ public class CuentaNegocio implements ICuentaNegocio {
             }
 
         } catch (PersistenciaException e) {
-            throw new NegocioException("Error al agregar el cliente", e);
+            throw new NegocioException("Error al agregar la cuenta", e);
         }
     }
 
@@ -154,7 +169,7 @@ public class CuentaNegocio implements ICuentaNegocio {
             }
 
         } catch (PersistenciaException e) {
-            throw new NegocioException("Error al agregar el cliente", e);
+            throw new NegocioException("Error al agregar la cuenta", e);
         }
     }
 
@@ -173,14 +188,14 @@ public class CuentaNegocio implements ICuentaNegocio {
     }
 
     private void validacionesCliente(ClienteEntidad cliente) throws NegocioException {
-        if (cliente.getIdCliente() > 0) {
+        if (cliente.getIdCliente() <= 0) {
             throw new NegocioException("Error con la cuenta");
         }
     }
 
     private void verificarCamposVaciosCuenta(CuentaEntidad cuenta) throws NegocioException {
-        if (cuenta.getNumeroCuenta() == null || cuenta.getNumeroCuenta().isEmpty()
-                || cuenta.getSaldo() == null || cuenta.getFechaApertura() == null || cuenta.getNip() == null) {
+        if (cuenta.getIdCliente() <= 0
+                || cuenta.getSaldo() == null || cuenta.getNip() == null) {
             throw new NegocioException("Todos los campos de la cuenta son obligatorios.");
         }
 

@@ -4,16 +4,24 @@
  */
 package formularios;
 
+import entidades.ClienteEntidad;
+import negocio.IClienteNegocio;
+import negocio.ICuentaNegocio;
+
 /**
  *
  * @author Usuario
  */
 public class MenuPrincipalForm extends javax.swing.JFrame {
 
-    /**
-     * Creates new form MenuPrincipalForm
-     */
-    public MenuPrincipalForm() {
+    private IClienteNegocio clienteNegocio;
+    private ICuentaNegocio cuentaNegocio;
+    private ClienteEntidad clienteActual;
+
+    public MenuPrincipalForm(IClienteNegocio cliente, ICuentaNegocio cuenta, ClienteEntidad clienteActual) {
+        this.clienteActual = clienteActual;
+        this.clienteNegocio = cliente;
+        this.cuentaNegocio = cuenta;
         initComponents();
     }
 
@@ -27,19 +35,141 @@ public class MenuPrincipalForm extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        InicioSesion = new javax.swing.JLabel();
+        realizarHistorialjButton1 = new javax.swing.JButton();
+        realizarEditarCuentajButton3 = new javax.swing.JButton();
+        realizarTransferenicaJButton = new javax.swing.JButton();
+        realizarRetirojButton2 = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        bienvenidajLabel1 = new javax.swing.JLabel();
+        realizarCuentajButton5 = new javax.swing.JButton();
+        realizarEliminarCuentajButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(87, 87, 86));
+        jPanel1.setBackground(new java.awt.Color(108, 142, 132));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        InicioSesion.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
+        InicioSesion.setForeground(new java.awt.Color(224, 224, 224));
+        InicioSesion.setText("Menu Principal");
+        jPanel1.add(InicioSesion, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 20, 200, 100));
+
+        realizarHistorialjButton1.setBackground(new java.awt.Color(87, 87, 86));
+        realizarHistorialjButton1.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        realizarHistorialjButton1.setForeground(new java.awt.Color(224, 224, 224));
+        realizarHistorialjButton1.setText("Mostrar Historial");
+        realizarHistorialjButton1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        realizarHistorialjButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                realizarHistorialjButton1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(realizarHistorialjButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 300, 180, 40));
+
+        realizarEditarCuentajButton3.setBackground(new java.awt.Color(87, 87, 86));
+        realizarEditarCuentajButton3.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        realizarEditarCuentajButton3.setForeground(new java.awt.Color(224, 224, 224));
+        realizarEditarCuentajButton3.setText("Editar Perfil");
+        realizarEditarCuentajButton3.setActionCommand("Editar Perfil");
+        realizarEditarCuentajButton3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        realizarEditarCuentajButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                realizarEditarCuentajButton3ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(realizarEditarCuentajButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 420, 180, 40));
+
+        realizarTransferenicaJButton.setBackground(new java.awt.Color(87, 87, 86));
+        realizarTransferenicaJButton.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        realizarTransferenicaJButton.setForeground(new java.awt.Color(224, 224, 224));
+        realizarTransferenicaJButton.setText("Hacer Transferencia");
+        realizarTransferenicaJButton.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        realizarTransferenicaJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                realizarTransferenicaJButtonActionPerformed(evt);
+            }
+        });
+        jPanel1.add(realizarTransferenicaJButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 180, 180, 40));
+
+        realizarRetirojButton2.setBackground(new java.awt.Color(87, 87, 86));
+        realizarRetirojButton2.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        realizarRetirojButton2.setForeground(new java.awt.Color(224, 224, 224));
+        realizarRetirojButton2.setText("Generar Retiro");
+        realizarRetirojButton2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        realizarRetirojButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                realizarRetirojButton2ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(realizarRetirojButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 240, 180, 40));
+
+        jPanel2.setBackground(new java.awt.Color(87, 87, 86));
+        jPanel2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 536, Short.MAX_VALUE)
+        );
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 540));
+
+        jPanel3.setBackground(new java.awt.Color(87, 87, 86));
+        jPanel3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 106, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 536, Short.MAX_VALUE)
+        );
+
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 0, 110, 540));
+
+        bienvenidajLabel1.setForeground(new java.awt.Color(87, 87, 86));
+        bienvenidajLabel1.setText("Bienvinido,");
+        jPanel1.add(bienvenidajLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 490, 110, 30));
+
+        realizarCuentajButton5.setBackground(new java.awt.Color(87, 87, 86));
+        realizarCuentajButton5.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        realizarCuentajButton5.setForeground(new java.awt.Color(224, 224, 224));
+        realizarCuentajButton5.setText("Crear Cuenta");
+        realizarCuentajButton5.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        realizarCuentajButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                realizarCuentajButton5ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(realizarCuentajButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 120, 180, 40));
+
+        realizarEliminarCuentajButton4.setBackground(new java.awt.Color(87, 87, 86));
+        realizarEliminarCuentajButton4.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        realizarEliminarCuentajButton4.setForeground(new java.awt.Color(224, 224, 224));
+        realizarEliminarCuentajButton4.setText("Eliminar Cuenta");
+        realizarEliminarCuentajButton4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        realizarEliminarCuentajButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                realizarEliminarCuentajButton4ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(realizarEliminarCuentajButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 360, 180, 40));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 519, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -51,42 +181,49 @@ public class MenuPrincipalForm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void realizarHistorialjButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_realizarHistorialjButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_realizarHistorialjButton1ActionPerformed
+
+    private void realizarEditarCuentajButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_realizarEditarCuentajButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_realizarEditarCuentajButton3ActionPerformed
+
+    private void realizarTransferenicaJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_realizarTransferenicaJButtonActionPerformed
+        ElegirCuentaForm elegirCuenta = new ElegirCuentaForm(clienteNegocio, cuentaNegocio, clienteActual);
+        elegirCuenta.setVisible(true);
+    }//GEN-LAST:event_realizarTransferenicaJButtonActionPerformed
+
+    private void realizarRetirojButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_realizarRetirojButton2ActionPerformed
+        ElegirCuentaForm elegirCuenta = new ElegirCuentaForm(clienteNegocio, cuentaNegocio, clienteActual);
+        elegirCuenta.setVisible(true);
+    }//GEN-LAST:event_realizarRetirojButton2ActionPerformed
+
+    private void realizarCuentajButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_realizarCuentajButton5ActionPerformed
+        CreacionCuentaForm crearCuenta = new CreacionCuentaForm(cuentaNegocio, clienteActual);
+        crearCuenta.setVisible(true);
+    }//GEN-LAST:event_realizarCuentajButton5ActionPerformed
+
+    private void realizarEliminarCuentajButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_realizarEliminarCuentajButton4ActionPerformed
+        ElegirCuentaForm elegirCuenta = new ElegirCuentaForm(clienteNegocio, cuentaNegocio, clienteActual);
+        elegirCuenta.setVisible(true);
+    }//GEN-LAST:event_realizarEliminarCuentajButton4ActionPerformed
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MenuPrincipalForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MenuPrincipalForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MenuPrincipalForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MenuPrincipalForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MenuPrincipalForm().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel InicioSesion;
+    private javax.swing.JLabel bienvenidajLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JButton realizarCuentajButton5;
+    private javax.swing.JButton realizarEditarCuentajButton3;
+    private javax.swing.JButton realizarEliminarCuentajButton4;
+    private javax.swing.JButton realizarHistorialjButton1;
+    private javax.swing.JButton realizarRetirojButton2;
+    private javax.swing.JButton realizarTransferenicaJButton;
     // End of variables declaration//GEN-END:variables
 }

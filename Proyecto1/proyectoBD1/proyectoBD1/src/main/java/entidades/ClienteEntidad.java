@@ -43,6 +43,7 @@ public class ClienteEntidad {
         this.contraseña = contraseña;
         this.apellidoPa = apellidoPa;
         this.apellidoMa = apellidoMa;
+        this.fechaNacimiento=fechaNacimiento;
         this.domicilio = domicilio;
     }
    
@@ -121,4 +122,11 @@ public class ClienteEntidad {
         int edad= periodo.getYears();
         return edad;
     }
+
+    @Override
+    public String toString() {
+        return "ClienteEntidad{" + "idCliente=" + idCliente + ", nombre=" + nombre + ", nomUsuario=" + nomUsuario + ", contrase\u00f1a=" + contraseña + ", apellidoPa=" + apellidoPa + ", apellidoMa=" + apellidoMa + ", fechaNacimiento=" + fechaNacimiento + ", domicilio=" + domicilio + '}';
+    }
+    
+    
 }

@@ -4,19 +4,51 @@
  */
 package formularios;
 
+import entidades.ClienteEntidad;
+import entidades.CuentaEntidad;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+import negocio.IClienteNegocio;
+import negocio.ICuentaNegocio;
+import negocio.NegocioException;
+
 /**
  *
  * @author Usuario
  */
 public class ElegirCuentaForm extends javax.swing.JFrame {
+    private JComboBox<CuentaEntidad> comboBox;
+    private IClienteNegocio clienteNegocio;
+    private ICuentaNegocio cuentaNegocio;
+    private ClienteEntidad clienteActual;
 
     /**
      * Creates new form ElegirCuentaForm
      */
-    public ElegirCuentaForm() {
+    public ElegirCuentaForm(IClienteNegocio clienteNegocio, ICuentaNegocio cuentaNegocio, ClienteEntidad clienteActual) {
+        this.clienteNegocio = clienteNegocio;
+        this.cuentaNegocio = cuentaNegocio;
+        this.clienteActual = clienteActual;
         initComponents();
+        llenarComboBox();
     }
 
+    private void llenarComboBox() {
+        DefaultComboBoxModel<CuentaEntidad> comboBoxCuentas = new DefaultComboBoxModel<>();
+        List<CuentaEntidad> cuentas = null;
+        try {
+            cuentas = this.cuentaNegocio.obtenerTodasLasCuentas(clienteActual);
+            
+        } catch (NegocioException ex) {
+            Logger.getLogger(ElegirCuentaForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        for (CuentaEntidad numeroCuenta : cuentas) {
+            comboBoxCuentas.addElement(numeroCuenta);
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -48,6 +80,11 @@ public class ElegirCuentaForm extends javax.swing.JFrame {
         jButton1.setBackground(new java.awt.Color(108, 142, 132));
         jButton1.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         jButton1.setText("Siguiente");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
         jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 250, -1, -1));
 
         jPanel2.setBackground(new java.awt.Color(108, 142, 132));
@@ -83,40 +120,14 @@ public class ElegirCuentaForm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ElegirCuentaForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ElegirCuentaForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ElegirCuentaForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ElegirCuentaForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ElegirCuentaForm().setVisible(true);
-            }
-        });
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel FondorResgistrate;

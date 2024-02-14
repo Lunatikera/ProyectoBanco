@@ -145,5 +145,7 @@ public class ClienteDAO implements IClienteDAO {
         return fechaComoTexto;
 
     }
+    
+    
 
 }

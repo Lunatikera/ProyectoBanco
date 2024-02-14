@@ -7,6 +7,7 @@ package negocio;
 import dto.CuentaDTO;
 import entidades.ClienteEntidad;
 import entidades.CuentaEntidad;
+import java.util.List;
 import persistencia.PersistenciaException;
 
 /**
@@ -25,5 +26,6 @@ public interface ICuentaNegocio {
 
     public void disponerDineroRetiro(String folio, String contraseña) throws NegocioException;
     
+    public List<CuentaEntidad> obtenerTodasLasCuentas(ClienteEntidad cliente) throws NegocioException;
     
 }

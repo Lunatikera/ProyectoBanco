@@ -4,16 +4,30 @@
  */
 package formularios;
 
+import entidades.ClienteEntidad;
+import entidades.CuentaEntidad;
+import java.math.BigDecimal;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import negocio.ICuentaNegocio;
+import negocio.NegocioException;
+
 /**
  *
  * @author Usuario
  */
 public class CreacionCuentaForm extends javax.swing.JFrame {
 
+    private ICuentaNegocio cuentaNegocio;
+    private ClienteEntidad clienteActual;
+
     /**
      * Creates new form CreacionCuentaForm
      */
-    public CreacionCuentaForm() {
+    public CreacionCuentaForm(ICuentaNegocio cuentaNegocio, ClienteEntidad clienteActual) {
+        this.cuentaNegocio = cuentaNegocio;
+        this.clienteActual = clienteActual;
         initComponents();
         this.setLocationRelativeTo(this);
 
@@ -29,34 +43,32 @@ public class CreacionCuentaForm extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        RegistrarUsuariojText = new javax.swing.JTextField();
+        saldojText = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         RegistrarseButton = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         RegistrarContraseñajText = new javax.swing.JPasswordField();
-        ConfirmarContraseñajText = new javax.swing.JPasswordField();
         jPanel2 = new javax.swing.JPanel();
+        confirmarContraseñajText1 = new javax.swing.JPasswordField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(87, 87, 86));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        RegistrarUsuariojText.setBackground(new java.awt.Color(224, 224, 224));
-        RegistrarUsuariojText.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        RegistrarUsuariojText.setForeground(new java.awt.Color(196, 196, 196));
-        RegistrarUsuariojText.setText("Numero Cuenta");
-        RegistrarUsuariojText.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RegistrarUsuariojTextActionPerformed(evt);
-            }
-        });
-        jPanel1.add(RegistrarUsuariojText, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 110, 150, 30));
+        saldojText.setBackground(new java.awt.Color(224, 224, 224));
+        saldojText.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        saldojText.setForeground(new java.awt.Color(0, 0, 0));
+        saldojText.setText("00.00");
+        jPanel1.add(saldojText, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 250, 150, 30));
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(224, 224, 224));
         jLabel1.setText("Crear Cuenta");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 20, 200, 100));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 20, 200, 100));
 
         RegistrarseButton.setBackground(new java.awt.Color(108, 142, 132));
         RegistrarseButton.setForeground(new java.awt.Color(224, 224, 224));
@@ -66,7 +78,7 @@ public class CreacionCuentaForm extends javax.swing.JFrame {
                 RegistrarseButtonActionPerformed(evt);
             }
         });
-        jPanel1.add(RegistrarseButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 290, 150, 30));
+        jPanel1.add(RegistrarseButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 310, 150, 30));
 
         jPanel3.setBackground(new java.awt.Color(108, 142, 132));
 
@@ -86,22 +98,7 @@ public class CreacionCuentaForm extends javax.swing.JFrame {
         RegistrarContraseñajText.setBackground(new java.awt.Color(224, 224, 224));
         RegistrarContraseñajText.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         RegistrarContraseñajText.setText("Contraseña");
-        RegistrarContraseñajText.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RegistrarContraseñajTextActionPerformed(evt);
-            }
-        });
-        jPanel1.add(RegistrarContraseñajText, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 170, 150, 30));
-
-        ConfirmarContraseñajText.setBackground(new java.awt.Color(224, 224, 224));
-        ConfirmarContraseñajText.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        ConfirmarContraseñajText.setText("Confirmar Contraseña");
-        ConfirmarContraseñajText.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ConfirmarContraseñajTextActionPerformed(evt);
-            }
-        });
-        jPanel1.add(ConfirmarContraseñajText, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 230, 150, 30));
+        jPanel1.add(RegistrarContraseñajText, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 130, 150, 30));
 
         jPanel2.setBackground(new java.awt.Color(108, 142, 132));
         jPanel2.setAutoscrolls(true);
@@ -119,6 +116,23 @@ public class CreacionCuentaForm extends javax.swing.JFrame {
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 90, 450));
 
+        confirmarContraseñajText1.setBackground(new java.awt.Color(224, 224, 224));
+        confirmarContraseñajText1.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        confirmarContraseñajText1.setText("Contraseña");
+        jPanel1.add(confirmarContraseñajText1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 190, 150, 30));
+
+        jLabel3.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel3.setText("Saldo");
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 230, -1, -1));
+
+        jLabel4.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel4.setText("PIN");
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 110, -1, -1));
+
+        jLabel5.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel5.setText("Confirmar PIN");
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 170, -1, -1));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -132,71 +146,48 @@ public class CreacionCuentaForm extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+ private void registrarCuenta(CuentaEntidad cuenta, ClienteEntidad cliente) throws PresentacionException {
+        try {
+            this.cuentaNegocio.agregarCuenta(cuenta, clienteActual);
 
-    private void RegistrarUsuariojTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegistrarUsuariojTextActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_RegistrarUsuariojTextActionPerformed
+            JOptionPane.showMessageDialog(null, "Enhorabuena, " + cliente.getNombre()+"su nuevo numero de cuenta es: "+ cuenta.getNumeroCuenta(), "Se ha registrado con exito", JOptionPane.INFORMATION_MESSAGE);
+            this.dispose();
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Error de registro", JOptionPane.ERROR_MESSAGE);
 
-    private void RegistrarseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegistrarseButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_RegistrarseButtonActionPerformed
-
-    private void ConfirmarContraseñajTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConfirmarContraseñajTextActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_ConfirmarContraseñajTextActionPerformed
-
-    private void RegistrarContraseñajTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegistrarContraseñajTextActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_RegistrarContraseñajTextActionPerformed
-
-    public int generarNumero() {
-        // Generar un número aleatorio de 8 dígitos
-        return (int) (Math.random() * 90000000) + 10000000; // Genera un número entre 10000000 y 99999999
+        }
     }
+    private void RegistrarseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegistrarseButtonActionPerformed
+        String pin = new String(RegistrarContraseñajText.getPassword());
+        String pin2 = new String(confirmarContraseñajText1.getPassword());
+        String saldoString = saldojText.getText();
+        BigDecimal saldo = new BigDecimal(saldoString);
+
+        CuentaEntidad cuenta = new CuentaEntidad(clienteActual.getIdCliente(), saldo, pin);
+            
+        try {
+            registrarCuenta(cuenta, clienteActual);
+        } catch (PresentacionException ex) {
+            Logger.getLogger(CreacionCuentaForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_RegistrarseButtonActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CreacionCuentaForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CreacionCuentaForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CreacionCuentaForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CreacionCuentaForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new CreacionCuentaForm().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPasswordField ConfirmarContraseñajText;
     private javax.swing.JPasswordField RegistrarContraseñajText;
-    private javax.swing.JTextField RegistrarUsuariojText;
     private javax.swing.JButton RegistrarseButton;
+    private javax.swing.JPasswordField confirmarContraseñajText1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JTextField saldojText;
     // End of variables declaration//GEN-END:variables
 }

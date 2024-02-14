@@ -15,9 +15,9 @@ import persistencia.PersistenciaException;
  */
 public interface IClienteNegocio {
 
-    public void agregar(ClienteEntidad cliente) throws NegocioException;
+    public void agregarCliente(ClienteEntidad cliente) throws NegocioException;
 
-    public void editar(ClienteEntidad cliente) throws NegocioException;
+    public void actualizarCliente(ClienteEntidad cliente) throws NegocioException;
 
     public ClienteEntidad iniciarSesion(String nombreUsuario, String contraseña) throws NegocioException;
 

@@ -5,6 +5,7 @@
 package persistencia.Interfaces;
 
 import dto.CuentaDTO;
+import dto.TransaccionDTO;
 import entidades.ClienteEntidad;
 import entidades.CuentaEntidad;
 import java.math.BigDecimal;
@@ -25,5 +26,9 @@ public interface ICuentaDAO {
 
     public BigDecimal consultarSaldo(CuentaDTO cuenta) throws PersistenciaException;
     
-    public void retiroSinCuenta(CuentaEntidad cuenta1, double monto) throws PersistenciaException;
+    public void generarRetiroSinCuenta(CuentaDTO cuenta1, double monto) throws PersistenciaException;
+    
+    public void disponerDineroRetiro(String folio, String contraseña) throws PersistenciaException;
+    
+    public TransaccionDTO obtenerDatos(String folio, String contraseña) throws PersistenciaException;
 }

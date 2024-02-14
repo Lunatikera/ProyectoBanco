@@ -37,6 +37,17 @@ public class ClienteEntidad {
         this.domicilio = domicilio;
     }
 
+    public ClienteEntidad(String nombre, String nomUsuario, String contraseña, String apellidoPa, String apellidoMa, Date fechaNacimiento, String domicilio) {
+        this.nombre = nombre;
+        this.nomUsuario = nomUsuario;
+        this.contraseña = contraseña;
+        this.apellidoPa = apellidoPa;
+        this.apellidoMa = apellidoMa;
+        this.fechaNacimiento = fechaNacimiento;
+        this.domicilio = domicilio;
+    }
+    
+
     public ClienteEntidad() {
     }
 

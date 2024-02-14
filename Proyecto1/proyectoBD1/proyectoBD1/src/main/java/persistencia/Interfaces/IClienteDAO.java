@@ -19,4 +19,6 @@ public interface IClienteDAO {
     public void editar(ClienteEntidad cliente) throws PersistenciaException;
 
     public ClienteEntidad iniciarSesion(String nombreUsuario, String contraseña) throws PersistenciaException;
+    
+    public boolean existeNombreUsuario(String nombreUsuario) throws PersistenciaException;
 }

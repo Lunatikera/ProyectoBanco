@@ -5,6 +5,7 @@
 package persistencia;
 
 import dto.CuentaDTO;
+import dto.TransaccionDTO;
 import entidades.ClienteEntidad;
 import entidades.CuentaEntidad;
 import java.math.BigDecimal;
@@ -14,6 +15,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import persistencia.Interfaces.IConexionBD;
 import persistencia.Interfaces.ICuentaDAO;
 
@@ -33,7 +36,7 @@ public class CuentaDAO implements ICuentaDAO {
     public void agregar(CuentaEntidad cuenta, ClienteEntidad cliente) throws PersistenciaException {
         // Definir la consulta SQL para insertar una nueva cuenta en la tabla 'Cuenta'
         String insertCuenta = "INSERT INTO Cuentas (numeroCuenta, saldo, fechaApertura, Nip, id_Cliente) VALUES (?, ?, ?, ?, ?)";
-        try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement statement = conexion.prepareStatement(insertCuenta, Statement.RETURN_GENERATED_KEYS)) {
+        try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement statement = conexion.prepareStatement(insertCuenta)) {
             // Generar el número de cuenta automáticamente (puedes implementar la lógica para generarlo)
             String numeroCuenta = generarNumeroAleatorio(); // Implementa este método según tu lógica de generación de número de cuenta
 
@@ -49,13 +52,13 @@ public class CuentaDAO implements ICuentaDAO {
                 System.out.println("No se pudo agregar la cuenta.");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new PersistenciaException("Error" + e.getMessage());
             // Manejo de errores
         }
     }
 
 // Método para generar el número de cuenta automáticamente
-    public String generarNumeroAleatorio() {
+    private String generarNumeroAleatorio() {
         // Generar un número aleatorio de 8 dígitos
         Random random = new Random();
         int numeroAleatorio = random.nextInt(90000000) + 10000000; // Genera un número entre 10000000 y 99999999
@@ -79,11 +82,12 @@ public class CuentaDAO implements ICuentaDAO {
                 System.out.println("No se encontró el cliente con numero de Cuenta: " + cuenta.getNumeroCuenta());
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new PersistenciaException("Error" + e.getMessage());
             // Manejo de errores
         }
     }
 
+    @Override
     public void transferencia(CuentaDTO cuenta1, CuentaDTO cuenta2, double monto) throws PersistenciaException {
 
         String IniciarTransaccion = "START transaction";
@@ -108,7 +112,7 @@ public class CuentaDAO implements ICuentaDAO {
             obtener.setString(2, cuenta2.getNumeroCuenta());
             obtener.executeUpdate();
             finalizar.execute();
-
+            agregarTransferencia(cuenta1, cuenta2, monto);
         } catch (SQLException e) {
             throw new PersistenciaException("Error" + e.getMessage());
         }
@@ -116,40 +120,116 @@ public class CuentaDAO implements ICuentaDAO {
 
     private void agregarTransferencia(CuentaDTO cuenta1, CuentaDTO cuenta2, double monto) throws PersistenciaException {
         String anadirTransaccion = "INSERT INTO transacciones(monto, id_CuentaOrigen) values (?,?)";
-        String añadirTransferencia = "INSERT INTO transferencias(id_CuentaDestino) values (?)";
-        try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement statement = conexion.prepareStatement(insertCuenta, Statement.RETURN_GENERATED_KEYS)) {
-
-        }
-        }
-
-        @Override
-        public BigDecimal consultarSaldo
-        (CuentaDTO cuenta) throws PersistenciaException {
-            String consultaSaldo = "Select saldo from cuentas where numeroCuenta=?";
-            BigDecimal saldoDisponible = null;
-            try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement consulta = conexion.prepareStatement(consultaSaldo)) {
-                consulta.setString(1, cuenta.getNumeroCuenta());
-                ResultSet resultado = consulta.executeQuery();
-                if (resultado.next()) {
-                    saldoDisponible = resultado.getBigDecimal("saldo");
-                    return saldoDisponible;
-
-                } else {
-                    throw new PersistenciaException("Hubo un error");
-                }
-            } catch (SQLException e) {
-                throw new PersistenciaException("Error" + e.getMessage());
+        String anadirTransferencia = "INSERT INTO transferencias(id_transaccion, id_CuentaDestino) values (LAST_INSERT_ID(), ?)";
+        try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement transaccion = conexion.prepareStatement(anadirTransaccion);  PreparedStatement transferencia = conexion.prepareStatement(anadirTransferencia)) {
+            transaccion.setDouble(1, monto);
+            transaccion.setInt(2, cuenta1.getIdCliente());
+            transferencia.setInt(1, cuenta2.getIdCliente());
+            if (consultarSaldo(cuenta1).compareTo(new BigDecimal(monto)) < 0) {
+                throw new PersistenciaException("Saldo insuficiente");
             }
+            int filasAfectadas = transaccion.executeUpdate();
+            if (filasAfectadas > 0) {
+                System.out.println("Cuenta agregada correctamente.");
+            } else {
+                throw new PersistenciaException("error");
+            }
+            int filasAfectadas2 = transferencia.executeUpdate();
+            if (filasAfectadas2 > 0) {
+                System.out.println("Cuenta agregada correctamente.");
+            } else {
+                throw new PersistenciaException("error");
+            }
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error" + e.getMessage());
+            // Manejo de errores
         }
+    }
 
-    
+    @Override
+    public BigDecimal consultarSaldo(CuentaDTO cuenta) throws PersistenciaException {
+        String consultaSaldo = "Select saldo from cuentas where numeroCuenta=?";
+        BigDecimal saldoDisponible = null;
+        try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement consulta = conexion.prepareStatement(consultaSaldo)) {
+            consulta.setString(1, cuenta.getNumeroCuenta());
+            ResultSet resultado = consulta.executeQuery();
+            if (resultado.next()) {
+                saldoDisponible = resultado.getBigDecimal("saldo");
+                return saldoDisponible;
 
-    public void retiroSinCuenta(CuentaEntidad cuenta1, double monto) throws PersistenciaException {
-        String IniciarTransaccion = "START transaction";
-        String SacarDinero = "UPDATE cuentas set saldo= saldo-? WHERE numeroCuenta=? ";
-        String ObtenerDinero = "UPDATE cuentas set saldo= saldo+? WHERE numeroCuenta=? ";
+            } else {
+                throw new PersistenciaException("No hay");
+            }
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error" + e.getMessage());
+        }
+    }
+
+    public void generarRetiroSinCuenta(CuentaDTO cuenta1, double monto) throws PersistenciaException {
+        String insertarTransaccion = "INSERT INTO Transacciones(monto, id_CuentaOrigen) values (?,?)";
+        String insertarRetiro = "INSERT INTO RetiroSinCuentas(id_Transaccion) values(LAST_INSERT_ID())";
+        try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement transaccion = conexion.prepareStatement(insertarTransaccion);  PreparedStatement retiro = conexion.prepareStatement(insertarRetiro)) {
+            transaccion.setDouble(1, monto);
+            transaccion.setInt(2, cuenta1.getIdCliente());
+
+            int filasAfectadas = transaccion.executeUpdate();
+            if (filasAfectadas > 0) {
+                System.out.println("Cuenta agregada correctamente.");
+            } else {
+                throw new PersistenciaException("error");
+            }
+            int filasAfectadas2 = retiro.executeUpdate();
+            if (filasAfectadas2 > 0) {
+                System.out.println("Cuenta agregada correctamente.");
+            } else {
+                throw new PersistenciaException("error");
+            }
+        } catch (SQLException ex) {
+            throw new PersistenciaException("Error" + ex.getMessage());
+        }
+    }
+
+    public void disponerDineroRetiro(String folio, String contraseña) throws PersistenciaException {
+        String iniciarTransaccion = "START transaction";
+        String cambiarEstado = "UPDATE RetiroSinCuentas SET estado=?, fechaCobro= NOW() WHERE id_Transaccion=? and contraseña=? ";
+        String sacarDinero = "UPDATE cuentas set saldo= saldo-? WHERE numeroCuenta=? ";
         String cancelarTransaccion = "ROLLBACK";
         String finalizarTransaccion = "COMMIT";
+        try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement inicio = conexion.prepareStatement(iniciarTransaccion);  PreparedStatement sacar = conexion.prepareStatement(sacarDinero);  PreparedStatement finalizar = conexion.prepareStatement(finalizarTransaccion);  PreparedStatement cancelar = conexion.prepareStatement(cancelarTransaccion);  PreparedStatement cambiar = conexion.prepareStatement(cambiarEstado)) {
+            inicio.execute();
+            TransaccionDTO datos = obtenerDatos(folio, contraseña);
+            cambiar.setString(1, "COBRADO");
+            cambiar.setInt(2, datos.getIdTransaccion());
+            cambiar.setString(3, contraseña);
+            cambiar.executeUpdate();
+            sacar.setBigDecimal(1, datos.getMonto());
+            sacar.setInt(2, datos.getIdCuentaOrigen());
+            sacar.executeUpdate();
+            finalizar.execute();
+        } catch (SQLException ex) {
+            throw new PersistenciaException("Error" + ex.getMessage());
+        }
+    }
 
+    public TransaccionDTO obtenerDatos(String folio, String contraseña) throws PersistenciaException {
+        String consultarRetiro = "SELECT id_Transaccion, monto,id_CuentaOrigen FROM Transacciones WHERE folio = ?";
+        try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement retiro = conexion.prepareStatement(consultarRetiro)) {
+
+            retiro.setString(1, folio);
+
+            try ( ResultSet resultSet = retiro.executeQuery()) {
+                if (resultSet.next()) {
+                    int idTransaccion = resultSet.getInt("id_Transaccion");
+                    BigDecimal monto = resultSet.getBigDecimal("monto");
+                    int IdCuentaOrigen = resultSet.getInt("id_CuentaOrigen");
+                    return new TransaccionDTO(idTransaccion, monto, folio, IdCuentaOrigen);
+                } else {
+                    throw new PersistenciaException("No se encontró un retiro sin cuenta con el folio y contraseña proporcionados.");
+                }
+
+            }
+        } catch (SQLException ex) {
+            throw new PersistenciaException("Error al obtener los datos del retiro sin cuenta: " + ex.getMessage());
+        }
     }
 }

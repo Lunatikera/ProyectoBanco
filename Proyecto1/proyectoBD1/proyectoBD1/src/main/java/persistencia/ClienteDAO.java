@@ -19,19 +19,18 @@ import persistencia.Interfaces.IConexionBD;
  * @author Usuario
  */
 public class ClienteDAO implements IClienteDAO {
-    
+
     private IConexionBD conexionBD;
 
     public ClienteDAO(IConexionBD conexion) {
         this.conexionBD = conexion;
     }
-    
 
     // Método para actualizar un cliente en la base de datos
     @Override
     public void editar(ClienteEntidad cliente) throws PersistenciaException {
         // Definir la consulta SQL para actualizar un cliente en la tabla 'clientes'
-        String updateCliente = "UPDATE Clientes SET nombre = ?, nomUsuario = ?, contraseña = ?, apellidoPa = ?, apellidoMa = ?, FechaNacimiento = ?, Domicilio = ? WHERE ID = ?";
+        String updateCliente = "UPDATE Clientes SET nombre = ?, contraseña = ?, apellidoPa = ?, apellidoMa = ?, FechaNacimiento = ?, Domicilio = ? WHERE ID = ?";
         try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement statement = conexion.prepareStatement(updateCliente)) {
 
             statement.setString(1, cliente.getNombre());
@@ -47,10 +46,10 @@ public class ClienteDAO implements IClienteDAO {
             if (filasAfectadas > 0) {
                 System.out.println("Cliente actualizado correctamente.");
             } else {
-            throw new PersistenciaException("No se encontró el cliente con ID: " + cliente.getIdCliente());
+                throw new PersistenciaException("No se encontró el cliente con ID: " + cliente.getIdCliente());
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new PersistenciaException("Error" + e.getMessage());
             // Manejo de errores
         }
     }
@@ -78,7 +77,7 @@ public class ClienteDAO implements IClienteDAO {
                 System.out.println("No se pudo agregar el cliente.");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new PersistenciaException("Error" + e.getMessage());
             // Manejo de errores
         }
     }
@@ -97,15 +96,31 @@ public class ClienteDAO implements IClienteDAO {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new PersistenciaException("Error" + e.getMessage());
             // Manejo de errores
         }
         return cliente;
 
     }
 
+    public boolean existeNombreUsuario(String nombreUsuario) throws PersistenciaException {
+        String consulta = "SELECT COUNT(*) AS total FROM Clientes WHERE nomUsuario = ?";
+        try ( Connection conexion = conexionBD.obtenerConexion();  PreparedStatement statement = conexion.prepareStatement(consulta)) {
+            statement.setString(1, nombreUsuario);
+            try ( ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    int total = resultSet.getInt("total");
+                    return total > 0;
+                }
+            }
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al verificar el nombre de usuario", e);
+        }
+        return false;
+    }
+
     private ClienteEntidad clienteEntidadDTO(ResultSet resultado) throws SQLException {
-        int idCliente = resultado.getInt("idCliente");
+        int idCliente = resultado.getInt("id_Cliente");
         String nombre = resultado.getString("nombre");
         String nomUsuario = resultado.getString("nomUsuario");
         String contraseña = resultado.getString("contraseña");
